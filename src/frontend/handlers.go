@@ -3,7 +3,6 @@ package main
 import (
 	"context"
 	"fmt"
-	"go.opentelemetry.io/otel/trace"
 	"html/template"
 	"math/rand"
 	"net/http"
@@ -11,6 +10,8 @@ import (
 	"strconv"
 	"strings"
 	"time"
+
+	"go.opentelemetry.io/otel/trace"
 
 	"github.com/gorilla/mux"
 	pb "github.com/honeycombio/microservices-demo/src/frontend/demo/msdemo"
@@ -309,12 +310,13 @@ func (fe *frontendServer) placeOrderHandler(w http.ResponseWriter, r *http.Reque
 
 	// Get current span and set additional attributes to it
 	var (
-		userIDKey    = attribute.Key("userid")
-		cartTotalKey = attribute.Key("cart_total")
-		requestIDKey = attribute.Key("requestID")
+		userIDKey    = attribute.Key("app.userid")
+		cartTotalKey = attribute.Key("app.cart_total")
+		requestIDKey = attribute.Key("app.requestID")
+		discountCode = attribute.Key("app.discount_code")
 	)
 	span := trace.SpanFromContext(ctx)
-	span.SetAttributes(userIDKey.String(s), requestIDKey.String(reqID))
+	span.SetAttributes(userIDKey.String(s), requestIDKey.String(reqID), discountCode.String("YOINK"))
 
 	order, err := pb.NewCheckoutServiceClient(fe.checkoutSvcConn).
 		PlaceOrder(ctx, &pb.PlaceOrderRequest{

@@ -2,6 +2,8 @@ FROM golang:1.17-alpine as builder
 RUN apk add --no-cache ca-certificates git
 WORKDIR /src
 
+# TODO: build the JS
+
 # restore dependencies
 COPY go.mod go.sum ./
 RUN go mod download
