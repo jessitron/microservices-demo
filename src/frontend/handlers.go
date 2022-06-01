@@ -304,9 +304,11 @@ func (fe *frontendServer) placeOrderHandler(w http.ResponseWriter, r *http.Reque
 	// add the UserID and requestId into OpenTelemetry Baggage to propagate across services
 	userIdMember, _ := baggage.NewMember("userid", s)
 	requestIdMember, _ := baggage.NewMember("requestID", reqID)
+	discountCodeMember, _ := baggage.NewMember("discountCode", discountCode)
 	bags := baggage.FromContext(ctx)
 	bags, _ = bags.SetMember(userIdMember)
 	bags, _ = bags.SetMember(requestIdMember)
+	bags, _ = bags.SetMember(discountCodeMember)
 	ctx = baggage.ContextWithBaggage(ctx, bags)
 
 	// Get current span and set additional attributes to it

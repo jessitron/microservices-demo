@@ -190,6 +190,7 @@ func (cs *checkoutService) PlaceOrder(ctx context.Context, req *pb.PlaceOrderReq
 	bags := baggage.FromContext(ctx)
 	userID := bags.Member("userid").Value()
 	requestID := bags.Member("requestID").Value()
+	discountCode := bags.Member("discountCode").Value()
 
 	ordCache := &OrderCache{
 		OrderId:   orderID.String(),
@@ -223,7 +224,7 @@ func (cs *checkoutService) PlaceOrder(ctx context.Context, req *pb.PlaceOrderReq
 	}
 
 	// Prepare Order
-	prep, err := cs.prepareOrderItemsAndShippingQuoteFromCart(ctx, req.UserId, req.UserCurrency, req.Address, cachesize)
+	prep, err := cs.prepareOrderItemsAndShippingQuoteFromCart(ctx, discountCode, req.UserId, req.UserCurrency, req.Address, cachesize)
 	if err != nil {
 		return nil, status.Errorf(codes.Internal, err.Error())
 	}
@@ -354,24 +355,35 @@ func loadDiscountFromDatabase(ctx context.Context, cachesize int) string {
 	return strconv.Itoa(discount)
 }
 
-func getDiscounts(ctx context.Context, u string, cachesize int) string {
+var yoinkProblem = false;
+
+func getDiscounts(ctx context.Context, discountCode string, u string, cachesize int) string {
 	tracer := otel.GetTracerProvider().Tracer("")
 	ctx, span := tracer.Start(ctx, "getDiscounts")
 	var (
-		userIDKey = attribute.Key("userid")
+		userIDKey = attribute.Key("app.userid")
+		discountCodeKey = attribute.Key("app.discount_code")
+		yeetedKey = attribute.Key("app.yeeted");
 	)
-	span.SetAttributes(userIDKey.String(u))
+	span.SetAttributes(userIDKey.String(u), discountCodeKey.String(discountCode), yeetedKey.Bool(yoinkProblem))
 	defer span.End()
-	rnd := rand.Float32()
-	if (u == "20109" && rnd < 0.5) || (rnd < 0.25) {
-		return loadDiscountFromDatabase(ctx, cachesize)
+	if discountCode == "YEET" {
+		// it's like a feature flag
+		yoinkProblem = true;
+	}
+	if discountCode == "UNYEET" {
+		// it's like a feature flag, except much sneakier and ridiculous
+		yoinkProblem = false;
+	}
+	if (discountCode == "YOINK" && yoinkProblem) {
+		return loadDiscountFromDatabase(ctx, 60000) // act as if the cache is big
 	} else {
 		return loadDiscountFromDatabase(ctx, 0)
 	}
 
 }
 
-func (cs *checkoutService) prepareOrderItemsAndShippingQuoteFromCart(ctx context.Context, userID, userCurrency string, address *pb.Address, cachesize int) (orderPrep, error) {
+func (cs *checkoutService) prepareOrderItemsAndShippingQuoteFromCart(ctx context.Context, discountCode, userID, userCurrency string, address *pb.Address, cachesize int) (orderPrep, error) {
 	var out orderPrep
 	cartItems, err := cs.getUserCart(ctx, userID)
 	if err != nil {
@@ -382,7 +394,7 @@ func (cs *checkoutService) prepareOrderItemsAndShippingQuoteFromCart(ctx context
 		return out, fmt.Errorf("failed to prepare order: %+v", err)
 	}
 
-	discount := getDiscounts(ctx, userID, cachesize)
+	discount := getDiscounts(ctx, discountCode, userID, cachesize)
 	if discount != "" {
 		log.Infof(fmt.Sprintf("Got a discount: %v.", discount))
 	}
