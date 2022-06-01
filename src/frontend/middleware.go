@@ -2,13 +2,13 @@ package main
 
 import (
 	"context"
-	"github.com/google/uuid"
-	"github.com/sirupsen/logrus"
 	"math/rand"
 	"net/http"
 	"strconv"
-	"strings"
 	"time"
+
+	"github.com/google/uuid"
+	"github.com/sirupsen/logrus"
 )
 
 type ctxKeyLog struct{}
@@ -73,23 +73,24 @@ func ensureSessionID(next http.Handler) http.HandlerFunc {
 
 	return func(w http.ResponseWriter, r *http.Request) {
 		var sessionID string
-		userAgent := r.UserAgent()
-		rnd := rand.Intn(100) + 1
+		// userAgent := r.UserAgent()
+		// rnd := rand.Intn(100) + 1
 
-		// DEMO: If the checkoutservice Cache size is greater than the userThreshold (default 35000)
-		// AND the request is from the load generator (useragent contains python)
-		// AND rnd > PercentNormal
-		// Then we will use a session id of 20109 to emphasize a problematic user
-		// sessionID will be referenced as userid in OpenTelemetry data
-		if CacheTrack.IsOverUserThreshold() && strings.Contains(userAgent, "python") && rnd > PercentNormal {
-			// Use the static sessionID "20109"
-			sessionID = "20109"
-			http.SetCookie(w, &http.Cookie{
-				Name:   cookieSessionID,
-				Value:  sessionID,
-				MaxAge: cookieMaxAge,
-			})
-		} else {
+		// // DEMO: If the checkoutservice Cache size is greater than the userThreshold (default 35000)
+		// // AND the request is from the load generator (useragent contains python)
+		// // AND rnd > PercentNormal
+		// // Then we will use a session id of 20109 to emphasize a problematic user
+		// // sessionID will be referenced as userid in OpenTelemetry data
+		// if CacheTrack.IsOverUserThreshold() && strings.Contains(userAgent, "python") && rnd > PercentNormal {
+		// 	// Use the static sessionID "20109"
+		// 	sessionID = "20109"
+		// 	http.SetCookie(w, &http.Cookie{
+		// 		Name:   cookieSessionID,
+		// 		Value:  sessionID,
+		// 		MaxAge: cookieMaxAge,
+		// 	})
+		// } else
+		{
 			// generate a sparse but random-looking set of session IDs
 			rsession := rand.Intn(25) + (rand.Intn(25) * 100) + (rand.Intn(25) * 10000)
 			sessionID = strconv.Itoa(rsession)
