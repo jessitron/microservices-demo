@@ -31,6 +31,7 @@ people = [
         'credit_card_expiration_month': '1',
         'credit_card_expiration_year': '2029',
         'credit_card_cvv': '672',
+        'discount_code': '',
     },
     {
         'email': 'anyone@sample.com',
@@ -43,6 +44,7 @@ people = [
         'credit_card_expiration_month': '3',
         'credit_card_expiration_year': '2027',
         'credit_card_cvv': '397',
+        'discount_code': 'FRIEND10',
     },
     {
         'email': 'aperson@acompany.com',
@@ -55,6 +57,7 @@ people = [
         'credit_card_expiration_month': '11',
         'credit_card_expiration_year': '2026',
         'credit_card_cvv': '784',
+        'discount_code': 'YOINK',
     },
     {
         'email': 'another@thing.com',
@@ -67,6 +70,7 @@ people = [
         'credit_card_expiration_month': '7',
         'credit_card_expiration_year': '2027',
         'credit_card_cvv': '649',
+        'discount_code': 'PARTYTIME',
     },
     {
         'email': 'foo@bar.com',
@@ -79,6 +83,7 @@ people = [
         'credit_card_expiration_month': '8',
         'credit_card_expiration_year': '2029',
         'credit_card_cvv': '835',
+        'discount_code': '',
     },
 ]
 

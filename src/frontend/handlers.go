@@ -293,6 +293,7 @@ func (fe *frontendServer) placeOrderHandler(w http.ResponseWriter, r *http.Reque
 		ccMonth, _    = strconv.ParseInt(r.FormValue("credit_card_expiration_month"), 10, 32)
 		ccYear, _     = strconv.ParseInt(r.FormValue("credit_card_expiration_year"), 10, 32)
 		ccCVV, _      = strconv.ParseInt(r.FormValue("credit_card_cvv"), 10, 32)
+		discountCode  = r.FormValue("discount_code")
 		s             = sessionID(r)
 	)
 
@@ -310,13 +311,13 @@ func (fe *frontendServer) placeOrderHandler(w http.ResponseWriter, r *http.Reque
 
 	// Get current span and set additional attributes to it
 	var (
-		userIDKey    = attribute.Key("app.userid")
-		cartTotalKey = attribute.Key("app.cart_total")
-		requestIDKey = attribute.Key("app.requestID")
-		discountCode = attribute.Key("app.discount_code")
+		userIDKey       = attribute.Key("app.userid")
+		cartTotalKey    = attribute.Key("app.cart_total")
+		requestIDKey    = attribute.Key("app.requestID")
+		discountCodeKey = attribute.Key("app.discount_code")
 	)
 	span := trace.SpanFromContext(ctx)
-	span.SetAttributes(userIDKey.String(s), requestIDKey.String(reqID), discountCode.String("YOINK"))
+	span.SetAttributes(userIDKey.String(s), requestIDKey.String(reqID), discountCodeKey.String(discountCode))
 
 	order, err := pb.NewCheckoutServiceClient(fe.checkoutSvcConn).
 		PlaceOrder(ctx, &pb.PlaceOrderRequest{
