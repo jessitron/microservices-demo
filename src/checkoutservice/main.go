@@ -3,6 +3,13 @@ package main
 import (
 	"context"
 	"fmt"
+	"math"
+	"math/rand"
+	"net"
+	"os"
+	"strconv"
+	"time"
+
 	"github.com/google/uuid"
 	pb "github.com/honeycombio/microservices-demo/src/checkoutservice/demo/msdemo"
 	"github.com/honeycombio/microservices-demo/src/checkoutservice/money"
@@ -23,12 +30,6 @@ import (
 	"google.golang.org/grpc/codes"
 	healthpb "google.golang.org/grpc/health/grpc_health_v1"
 	"google.golang.org/grpc/status"
-	"math"
-	"math/rand"
-	"net"
-	"os"
-	"strconv"
-	"time"
 )
 
 const (
@@ -355,28 +356,28 @@ func loadDiscountFromDatabase(ctx context.Context, cachesize int) string {
 	return strconv.Itoa(discount)
 }
 
-var yoinkProblem = false;
+var yoinkProblem = false
 
 func getDiscounts(ctx context.Context, discountCode string, u string, cachesize int) string {
 	tracer := otel.GetTracerProvider().Tracer("")
 	ctx, span := tracer.Start(ctx, "getDiscounts")
 	var (
-		userIDKey = attribute.Key("app.userid")
+		userIDKey       = attribute.Key("app.userid")
 		discountCodeKey = attribute.Key("app.discount_code")
-		yeetedKey = attribute.Key("app.yeeted");
+		yeetedKey       = attribute.Key("app.yeeted")
 	)
 	span.SetAttributes(userIDKey.String(u), discountCodeKey.String(discountCode), yeetedKey.Bool(yoinkProblem))
 	defer span.End()
 	if discountCode == "YEET" {
 		// it's like a feature flag
-		yoinkProblem = true;
+		yoinkProblem = true
 	}
 	if discountCode == "UNYEET" {
 		// it's like a feature flag, except much sneakier and ridiculous
-		yoinkProblem = false;
+		yoinkProblem = false
 	}
-	if (discountCode == "YOINK" && yoinkProblem) {
-		return loadDiscountFromDatabase(ctx, 60000) // act as if the cache is big
+	if discountCode == "YOINK" && yoinkProblem {
+		return loadDiscountFromDatabase(ctx, 50000) // act as if the cache is big
 	} else {
 		return loadDiscountFromDatabase(ctx, 0)
 	}
