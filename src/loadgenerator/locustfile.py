@@ -31,7 +31,6 @@ people = [
         'credit_card_expiration_month': '1',
         'credit_card_expiration_year': '2029',
         'credit_card_cvv': '672',
-        'discount_code': '',
     },
     {
         'email': 'anyone@sample.com',
@@ -44,7 +43,6 @@ people = [
         'credit_card_expiration_month': '3',
         'credit_card_expiration_year': '2027',
         'credit_card_cvv': '397',
-        'discount_code': 'FRIEND10',
     },
     {
         'email': 'aperson@acompany.com',
@@ -57,7 +55,6 @@ people = [
         'credit_card_expiration_month': '11',
         'credit_card_expiration_year': '2026',
         'credit_card_cvv': '784',
-        'discount_code': 'YOINK',
     },
     {
         'email': 'another@thing.com',
@@ -70,7 +67,6 @@ people = [
         'credit_card_expiration_month': '7',
         'credit_card_expiration_year': '2027',
         'credit_card_cvv': '649',
-        'discount_code': 'PARTYTIME',
     },
     {
         'email': 'foo@bar.com',
@@ -83,10 +79,13 @@ people = [
         'credit_card_expiration_month': '8',
         'credit_card_expiration_year': '2029',
         'credit_card_cvv': '835',
-        'discount_code': '',
     },
 ]
 
+discount_codes = ['','','','','','', # 60% empty
+                  'YOINK', # 10% will be slow sometimes
+                  'FRIEND10', 'PARTYTIME', 'BANANAPANTS', # 30% other
+                 ]
 
 class WebsiteUser(HttpUser):
     wait_time = between(1, 10)
@@ -124,4 +123,6 @@ class WebsiteUser(HttpUser):
     @task(5)
     def checkout(self):
         self.add_to_cart()
-        self.client.post("/cart/checkout", random.choice(people))
+        person = random.choice(people)
+        person['discount_code'] = random.choice(discount_codes)
+        self.client.post("/cart/checkout", person)
