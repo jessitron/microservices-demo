@@ -16,7 +16,7 @@ type ctxKeyRequestID struct{}
 
 type logHandler struct {
 	log  *logrus.Logger
-	next http.Handler
+	next http.Handler	
 }
 
 type responseRecorder struct {

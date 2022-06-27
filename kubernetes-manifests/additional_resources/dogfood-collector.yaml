@@ -1,0 +1,58 @@
+honeycomb:
+  # Specify either your apiKey, **OR** the  name of an existingSecret resource containing your Honeycomb API key
+  # apiKey: YOUR_API_KEY
+  # existingSecret: honeycomb-api-key
+
+  # Specify host URL to send all events to
+  apiHost: api-dogfood.honeycomb.io:443
+  # Specify the name of the dataset to send data to
+  dataset: microservices-demo
+
+image:
+  tag: 0.54.0
+
+config:
+  receivers:
+    otlp/poopy:
+      protocols:
+        http:
+          endpoint: "0.0.0.0:4318"
+          cors:
+            allowed_origins:
+              - "http://localhost:8080"
+              - "https://ui-pr10536.honeycomb.io"
+  service:
+    extensions: [health_check]
+    pipelines:
+      traces:
+        receivers: [otlp/poopy]
+        processors: [memory_limiter, batch]
+        exporters: [otlp]
+
+# disable ports that are not required
+ports:
+  jaeger-binary:
+    enabled: false
+  jaeger-compact:
+    enabled: false
+  jaeger-grpc:
+    enabled: false
+  jaeger-http:
+    enabled: false
+  zipkin:
+    enabled: false
+
+serviceAccount:
+  create: true
+
+service:
+  type: LoadBalancer
+  annotations: {}
+
+resources:
+  limits:
+    cpu: 500m
+    memory: 2Gi
+  requests:
+    cpu: 200m
+    memory: 400Mi
