@@ -1,0 +1,39 @@
+mode: deployment
+
+config:
+  exporters:
+    logging:
+      loglevel: debug
+  receivers:
+    jaeger: null
+    prometheus: null
+    zipkin: null
+  service:
+    pipelines:
+      traces:
+        receivers:
+          - otlp
+        exporters:
+          - logging
+      metrics: null
+      logs: null
+
+ports:
+  otlp:
+    enabled: false
+  otlp-http:
+    enabled: true
+    containerPort: 4318
+    servicePort: 4318
+    hostPort: 4318
+    protocol: TCP
+  jaeger-compact:
+    enabled: false
+  jaeger-thrift:
+    enabled: false
+  jaeger-grpc:
+    enabled: false
+  zipkin:
+    enabled: false
+  metrics:
+    enabled: false
