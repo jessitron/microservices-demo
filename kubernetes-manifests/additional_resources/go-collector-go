@@ -1,0 +1,3 @@
+helm install opentelemetry-collector-hack honeycomb/opentelemetry-collector \
+      --set honeycomb.apiKey=9WsQf53xKjBzBVbCSA6YOC \
+      --values ./kubernetes-manifests/additional_resources/dogfood-collector.yaml

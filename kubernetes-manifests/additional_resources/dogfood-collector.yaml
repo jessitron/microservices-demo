@@ -4,16 +4,16 @@ honeycomb:
   # existingSecret: honeycomb-api-key
 
   # Specify host URL to send all events to
-  apiHost: api-dogfood.honeycomb.io:443
+  apiHost: api-kibble.honeycomb.io:443
   # Specify the name of the dataset to send data to
-  dataset: microservices-demo
+  dataset: poodle
 
 image:
   tag: 0.54.0
 
 config:
   receivers:
-    otlp/poopy:
+    otlp/doopy:
       protocols:
         http:
           endpoint: "0.0.0.0:4318"
@@ -25,7 +25,7 @@ config:
     extensions: [health_check]
     pipelines:
       traces:
-        receivers: [otlp/poopy]
+        receivers: [otlp/doopy]
         processors: [memory_limiter, batch]
         exporters: [otlp]
 

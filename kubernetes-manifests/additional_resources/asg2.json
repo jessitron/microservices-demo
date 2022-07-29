@@ -1,0 +1,134 @@
+{
+    "AutoScalingGroups": [
+        {
+            "AutoScalingGroupName": "eks-damn-a2c059de-f039-5410-e6ac-a833f4266044",
+            "AutoScalingGroupARN": "arn:aws:autoscaling:us-east-1:414852377253:autoScalingGroup:d0642653-2c63-4f8b-afb3-3e467b4fedbb:autoScalingGroupName/eks-damn-a2c059de-f039-5410-e6ac-a833f4266044",
+            "MixedInstancesPolicy": {
+                "LaunchTemplate": {
+                    "LaunchTemplateSpecification": {
+                        "LaunchTemplateId": "lt-066b52d56726fb660",
+                        "LaunchTemplateName": "eks-a2c059de-f039-5410-e6ac-a833f4266044",
+                        "Version": "1"
+                    },
+                    "Overrides": [
+                        {
+                            "InstanceType": "t3.medium"
+                        }
+                    ]
+                },
+                "InstancesDistribution": {
+                    "OnDemandAllocationStrategy": "prioritized",
+                    "OnDemandBaseCapacity": 0,
+                    "OnDemandPercentageAboveBaseCapacity": 100,
+                    "SpotAllocationStrategy": "lowest-price",
+                    "SpotInstancePools": 2
+                }
+            },
+            "MinSize": 2,
+            "MaxSize": 4,
+            "DesiredCapacity": 3,
+            "DefaultCooldown": 300,
+            "AvailabilityZones": [
+                "us-east-1a",
+                "us-east-1b",
+                "us-east-1c",
+                "us-east-1d",
+                "us-east-1f"
+            ],
+            "LoadBalancerNames": [],
+            "TargetGroupARNs": [],
+            "HealthCheckType": "EC2",
+            "HealthCheckGracePeriod": 15,
+            "Instances": [
+                {
+                    "InstanceId": "i-02448d819596327db",
+                    "InstanceType": "t3.medium",
+                    "AvailabilityZone": "us-east-1f",
+                    "LifecycleState": "InService",
+                    "HealthStatus": "Healthy",
+                    "LaunchTemplate": {
+                        "LaunchTemplateId": "lt-066b52d56726fb660",
+                        "LaunchTemplateName": "eks-a2c059de-f039-5410-e6ac-a833f4266044",
+                        "Version": "1"
+                    },
+                    "ProtectedFromScaleIn": false
+                },
+                {
+                    "InstanceId": "i-0387b9d8ed66e60e8",
+                    "InstanceType": "t3.medium",
+                    "AvailabilityZone": "us-east-1d",
+                    "LifecycleState": "InService",
+                    "HealthStatus": "Healthy",
+                    "LaunchTemplate": {
+                        "LaunchTemplateId": "lt-066b52d56726fb660",
+                        "LaunchTemplateName": "eks-a2c059de-f039-5410-e6ac-a833f4266044",
+                        "Version": "1"
+                    },
+                    "ProtectedFromScaleIn": false
+                },
+                {
+                    "InstanceId": "i-0b222a488e50357fa",
+                    "InstanceType": "t3.medium",
+                    "AvailabilityZone": "us-east-1b",
+                    "LifecycleState": "InService",
+                    "HealthStatus": "Healthy",
+                    "LaunchTemplate": {
+                        "LaunchTemplateId": "lt-066b52d56726fb660",
+                        "LaunchTemplateName": "eks-a2c059de-f039-5410-e6ac-a833f4266044",
+                        "Version": "1"
+                    },
+                    "ProtectedFromScaleIn": false
+                }
+            ],
+            "CreatedTime": "2022-05-11T15:31:03.018000+00:00",
+            "SuspendedProcesses": [],
+            "VPCZoneIdentifier": "subnet-0fb8cc28eea4849e9,subnet-01d9f251ac43e89d6,subnet-03d11ef804eb1318c,subnet-07d827d6fea503dd0,subnet-0ada08d95717e5935",
+            "EnabledMetrics": [],
+            "Tags": [
+                {
+                    "ResourceId": "eks-damn-a2c059de-f039-5410-e6ac-a833f4266044",
+                    "ResourceType": "auto-scaling-group",
+                    "Key": "eks:cluster-name",
+                    "Value": "microservices-demotron",
+                    "PropagateAtLaunch": true
+                },
+                {
+                    "ResourceId": "eks-damn-a2c059de-f039-5410-e6ac-a833f4266044",
+                    "ResourceType": "auto-scaling-group",
+                    "Key": "eks:nodegroup-name",
+                    "Value": "damn",
+                    "PropagateAtLaunch": true
+                },
+                {
+                    "ResourceId": "eks-damn-a2c059de-f039-5410-e6ac-a833f4266044",
+                    "ResourceType": "auto-scaling-group",
+                    "Key": "k8s.io/cluster-autoscaler/enabled",
+                    "Value": "true",
+                    "PropagateAtLaunch": true
+                },
+                {
+                    "ResourceId": "eks-damn-a2c059de-f039-5410-e6ac-a833f4266044",
+                    "ResourceType": "auto-scaling-group",
+                    "Key": "k8s.io/cluster-autoscaler/microservices-demotron",
+                    "Value": "owned",
+                    "PropagateAtLaunch": true
+                },
+                {
+                    "ResourceId": "eks-damn-a2c059de-f039-5410-e6ac-a833f4266044",
+                    "ResourceType": "auto-scaling-group",
+                    "Key": "kubernetes.io/cluster/microservices-demotron",
+                    "Value": "owned",
+                    "PropagateAtLaunch": true
+                }
+            ],
+            "TerminationPolicies": [
+                "AllocationStrategy",
+                "OldestLaunchTemplate",
+                "OldestInstance"
+            ],
+            "NewInstancesProtectedFromScaleIn": false,
+            "ServiceLinkedRoleARN": "arn:aws:iam::414852377253:role/aws-service-role/autoscaling.amazonaws.com/AWSServiceRoleForAutoScaling",
+            "CapacityRebalance": true
+        }
+    ]
+}

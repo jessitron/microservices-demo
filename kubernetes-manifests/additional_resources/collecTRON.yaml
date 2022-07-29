@@ -2,9 +2,16 @@ mode: deployment
 
 config:
   exporters:
-    logging:
-      loglevel: debug
+    otlp/honeycomb:
+      endpoint: api.honeycomb.io:443
+      headers:
+        "x-honeycomb-team": "${HONEYCOMB_API_KEY}"
   receivers:
+    otlp/anyorigin:
+      protocols:
+        http:
+          cors:
+            allowed_origins: "*"
     jaeger: null
     prometheus: null
     zipkin: null
@@ -12,11 +19,19 @@ config:
     pipelines:
       traces:
         receivers:
-          - otlp
+          - otlp/anyorigin
+        processors: [memory_limiter, batch]
         exporters:
-          - logging
+          - otlp/honeycomb
       metrics: null
       logs: null
+
+extraEnvs:
+  - name: HONEYCOMB_API_KEY
+    valueFrom:
+      secretKeyRef:
+        name: honeycomb-api-key-for-frontend-collector
+        key: api-key
 
 ports:
   otlp:
@@ -37,3 +52,6 @@ ports:
     enabled: false
   metrics:
     enabled: false
+
+service:
+  type: LoadBalancer
