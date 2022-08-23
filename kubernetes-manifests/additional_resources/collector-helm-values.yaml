@@ -1,0 +1,55 @@
+mode: deployment
+
+config:
+  exporters:
+    otlp/lizjaeger:
+      endpoint: 54.221.90.109:4317
+      tls:
+        insecure: true
+    otlp/hny:
+      endpoint: api.honeycomb.io:443
+      headers:
+        "x-honeycomb-team": PLyVSq6vJHjfbfavFVHk6B
+  receivers:
+    otlp:
+      protocols:
+        http:
+          cors:
+            allowed_origins: "https://send-a-client-span.glitch.me"
+    jaeger: null
+    prometheus: null
+    zipkin: null
+  service:
+    pipelines:
+      traces:
+        receivers:
+          - otlp
+        exporters:
+          - otlp/lizjaeger
+          - logging
+          - otlp/hny
+      metrics: null
+      logs: null
+
+ports:
+  otlp:
+    enabled: false
+  otlp-http:
+    enabled: true
+    containerPort: 4318
+    servicePort: 4318
+    hostPort: 4318
+    protocol: TCP
+  jaeger-compact:
+    enabled: false
+  jaeger-thrift:
+    enabled: false
+  jaeger-grpc:
+    enabled: false
+  zipkin:
+    enabled: false
+  metrics:
+    enabled: false
+
+service:
+  type: LoadBalancer

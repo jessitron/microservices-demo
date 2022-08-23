@@ -1,0 +1,102 @@
+
+-- reset
+helm uninstall collectron
+------
+
+// here is the UI: https://glitch.com/edit/#!/send-a-client-span?path=src%2Fpages%2Fhome.jsx%3A98%3A11
+
+helm repo add open-telemetry https://open-telemetry.github.io/opentelemetry-helm-charts
+
+helm install collectron open-telemetry/opentelemetry-collector
+
+// create collector-helm-values.yaml
+// options: https://github.com/open-telemetry/opentelemetry-helm-charts/blob/main/charts/opentelemetry-collector/values.yaml
+
+helm install collectron open-telemetry/opentelemetry-collector --values collector-helm-values.yaml
+
+k get pods | grep collectron
+
+k get logs <pod name>
+
+// but then:
+kubectl get pods -o name | grep collectron | sed 's#pod/##' | xargs kubectl logs
+
+// too much; put in config to do less
+
+```
+
+config:
+  receivers:
+    jaeger: null
+    prometheus: null
+    zipkin: null
+  service:
+    pipelines:
+      traces:
+        receivers:
+          - otlp
+      metrics: null
+      logs: null
+
+ports:
+  otlp:
+    enabled: false
+  otlp-http:
+    enabled: true
+    containerPort: 4318
+    servicePort: 4318
+    hostPort: 4318
+    protocol: TCP  
+  jaeger-compact:
+    enabled: false
+  jaeger-thrift:
+    enabled: false
+  jaeger-grpc:
+    enabled: false
+  zipkin:
+    enabled: false
+  metrics:
+    enabled: false
+```
+
+// now expose to the world
+
+```
+service:
+  type: LoadBalancer
+```
+
+k get services | grep collectron
+
+// build up to
+curl -i a54c11f61971c4a5ca518fcccf049a0a-412718395.us-east-1.elb.amazo POST -H "Content-Type: application/json" -d @span.json
+
+// jaeger
+// http://54.221.90.109:16686/search
+
+```
+    otlp/lizjaeger:
+      endpoint: 54.221.90.109:4317
+      tls:
+        insecure: true
+```
+
+// cors
+
+```
+receivers:
+    otlp:
+      protocols:
+        http:
+          cors:
+            allowed_origins: "https://send-a-client-span.glitch.me"
+```
+
+// exporter: hny
+
+```
+    otlp/hny:
+      endpoint: api.honeycomb.io:443
+      headers:
+        "x-honeycomb-team": PLyVSq6vJHjfbfavFVHk6B
+```

@@ -15,9 +15,9 @@
         {
           "spans": [
             {
-              "traceId": "71699b6fe85982c7c8995ea3d9f95df5",
-              "spanId": "3c191d03fa8be065",
-              "name": "spanitron from outside 3",
+              "traceId": "e1699b6fe85982c7c8995ea3d9f95df5",
+              "spanId": "4c191d03fa8be065",
+              "name": "spanitron",
               "kind": 3,
               "droppedAttributesCount": 0,
               "events": [],
@@ -31,4 +31,4 @@
       ]
     }
   ]
- }
+}
