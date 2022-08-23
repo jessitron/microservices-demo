@@ -6,7 +6,7 @@
           {
             "key": "service.name",
             "value": {
-              "stringValue": "another-test"
+              "stringValue": "test-with-curl"
             }
           }
         ]
@@ -15,10 +15,12 @@
         {
           "spans": [
             {
-              "traceId": "e1699b6fe85982c7c8995ea3d9f95df5",
+              "traceId": "f3699b6fe85982c7c8995ea3d9f95df5",
               "spanId": "4c191d03fa8be065",
               "name": "spanitron",
               "kind": 3,
+              "startTimeUnixNano": "1661270145000000000",
+              "endTimeUnixNano": "1661270145008009000",
               "droppedAttributesCount": 0,
               "events": [],
               "droppedEventsCount": 0
