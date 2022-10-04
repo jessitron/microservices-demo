@@ -9,6 +9,8 @@ honeycomb:
   dataset: microservices-demo
 
 config:
+  exporters:
+    logging:
   processors:
     k8sattributes:
       passthrough: false
@@ -28,7 +30,7 @@ config:
       traces:
         receivers: [otlp]
         processors: [memory_limiter, batch, k8sattributes]
-        exporters: [otlp]
+        exporters: [otlp, logging]
 
 # disable ports that are not required
 ports:

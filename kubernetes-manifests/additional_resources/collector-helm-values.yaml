@@ -1,15 +1,14 @@
 mode: deployment
 
+service:
+  type: LoadBalancer
+
 config:
   exporters:
     otlp/lizjaeger:
       endpoint: 54.221.90.109:4317
       tls:
         insecure: true
-    otlp/hny:
-      endpoint: api.honeycomb.io:443
-      headers:
-        "x-honeycomb-team": PLyVSq6vJHjfbfavFVHk6B
   receivers:
     otlp:
       protocols:
@@ -25,9 +24,8 @@ config:
         receivers:
           - otlp
         exporters:
-          - otlp/lizjaeger
           - logging
-          - otlp/hny
+          - otlp/lizjaeger
       metrics: null
       logs: null
 
@@ -50,6 +48,3 @@ ports:
     enabled: false
   metrics:
     enabled: false
-
-service:
-  type: LoadBalancer

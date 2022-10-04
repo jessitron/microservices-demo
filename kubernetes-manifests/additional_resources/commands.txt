@@ -14,9 +14,19 @@ helm install collectron open-telemetry/opentelemetry-collector
 
 helm install collectron open-telemetry/opentelemetry-collector --values collector-helm-values.yaml
 
+
+// also  expose to the world bc this takes a few minutes
+
+```
+mode: deployment
+
+service:
+  type: LoadBalancer
+```
+
 k get pods | grep collectron
 
-k get logs <pod name>
+k logs <pod name>
 
 // but then:
 kubectl get pods -o name | grep collectron | sed 's#pod/##' | xargs kubectl logs
@@ -59,12 +69,6 @@ ports:
     enabled: false
 ```
 
-// now expose to the world
-
-```
-service:
-  type: LoadBalancer
-```
 
 k get services | grep collectron
 
