@@ -104,3 +104,24 @@ receivers:
       headers:
         "x-honeycomb-team": PLyVSq6vJHjfbfavFVHk6B
 ```
+
+## january 2023
+Today I'm trying to add jaeger
+
+> helm install --values values.yaml jaegertron jaegertracing/jaeger
+
+The recommended way to log in:
+export POD_NAME=$(kubectl get pods --namespace default -l "app.kubernetes.io/instance=jaegertron,app.kubernetes.io/component=query" -o jsonpath="{.items[0].metadata.name}")
+  echo http://127.0.0.1:8080/
+  kubectl port-forward --namespace default $POD_NAME 8080:16686
+
+which works, but I want a public port.
+although more important is to get the collector to send to it
+
+# now trying 
+
+> helm uninstall opentelemetry-collector
+
+> helm upgrade --values opentelemetry-collector-values.yaml opentelemetry-collector open-telemetry/opentelemetry-collector --install
+
+after removing 
