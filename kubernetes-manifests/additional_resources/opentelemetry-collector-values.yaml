@@ -1,6 +1,12 @@
 mode: deployment
 
+image:
+  repository: otel/opentelemetry-collector-contrib
+  tag: 0.69.0
+
 config:
+  processors:
+    k8sattributes: {}
   exporters:
     logging: {}
     otlp/honeycomb:
@@ -16,7 +22,7 @@ config:
     pipelines:
       traces:
         receivers: [otlp]
-        processors: [memory_limiter, batch]
+        processors: [memory_limiter, batch, k8sattributes]
         exporters: [otlp/honeycomb, logging, jaeger]
       metrics:
       logs:
