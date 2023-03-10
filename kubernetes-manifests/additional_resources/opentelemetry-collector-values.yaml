@@ -26,6 +26,8 @@ config:
         exporters: [otlp/honeycomb, logging, jaeger]
       metrics:
       logs:
+        receivers: [otlp]
+        exporters: [otlp/honeycomb, logging]
 
 # disable ports that are not required
 ports:

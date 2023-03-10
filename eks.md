@@ -100,7 +100,7 @@ Then put your ECS repository URI in for `default-repo`.
 
 Here's the spell:
 
-`aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 313131313131.dkr.ecr.us-east-1.amazonaws.com`
+`aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin ${AWS_ACCOUNT_NUMBER}.dkr.ecr.us-east-1.amazonaws.com`
 
 Put your region in for us-east-1, and your account ID for 313131313131.
 

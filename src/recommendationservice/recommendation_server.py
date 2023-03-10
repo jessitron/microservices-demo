@@ -67,14 +67,20 @@ class RecommendationService(demo_pb2_grpc.RecommendationServiceServicer):
             span = trace.get_current_span()
             span.set_attribute("active_threads", len(worker_pool._threads))
             span.set_attribute("pending_pool", worker_pool._work_queue.qsize())
+            span.set_attribute("app.product_ids", ','.join(request.product_ids))
+            span.set_attribute("app.input_product_id_count", len(request.product_ids))
             max_responses = 5
 
             # fetch list of products from product catalog stub
             cat_response = product_catalog_stub.ListProducts(demo_pb2.Empty())
             product_ids = [x.id for x in cat_response.products]
+            span.set_attribute("app.listed_product_id_count", len(product_ids))
             filtered_products = list(set(product_ids) - set(request.product_ids))
+            span.set_attribute("app.filtered_product_id_count", len(product_ids))
             num_products = len(filtered_products)
             num_return = min(max_responses, num_products)
+
+            span.set_attribute("app.returned_product_count", num_return)
 
             # sample list of indicies to return
             indices = sample(range(num_products), num_return)
